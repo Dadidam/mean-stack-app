@@ -9,11 +9,13 @@ passport.use(
   new GoogleStrategy(
     {
       clientID: keys.googleClientID,
-      clientSecrent: keys.googleClientSecret,
-      callbackURL: 'auth/google/callback'
+      clientSecret: keys.googleClientSecret,
+      callbackURL: '/auth/google/callback'
     },
-    accessToken => {
-      console.log(accessToken);
+    (accessToken, refreshToken, profile, done) => {
+      console.log('accessToken: ', accessToken);
+      console.log('refresh token: ', refreshToken);
+      console.log('profile: ', profile);
     }
   )
 );
@@ -24,6 +26,8 @@ app.get(
     scope: ['profile', 'email']
   })
 );
+
+app.get('/auth/google/callback', passport.authenticate('google'));
 
 // PORT from environment for production deployment
 // For development we use 4999 port number
